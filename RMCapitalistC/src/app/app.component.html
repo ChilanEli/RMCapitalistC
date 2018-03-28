@@ -1,12 +1,57 @@
+<nav class="navbar navbar-inverse" style="background-color:#333">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+
+      <a class="navbar-brand" style="padding-top: 0px;">
+        <img [attr.src]="server+world.logo" class="img-rounded" width="48" height="48">
+      </a>
+      <a class="navbar-brand">
+        <span [innerHTML]="world.name"> </span>
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Rick C-137">
+        </div>
+      </form>
+      <a class="navbar-brand">
+        <span [innerHTML]="world.money | bigvalue"> </span>
+      </a>
+      <a class="navbar-brand" style="padding-top: 9px;">
+        <img [attr.src]="server+devise" width="30" height="30" class="moneyLogo"> </a>
+      <ul class="nav navbar-nav navbar-form navbar-right">
+        <li>
+          <button type="button" class="btn btn-danger" id="multiplicateur">Buy 1 X</button>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container-fluid -->
+</nav>
+
+
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-4"><img [attr.src]="server+world.logo" width="70" height="70" class="enteteLogo" alt=""> {{world.name}}</div>
-    <div class="col-md-4">Entete2</div>
-    <div class="col-md-4">Entete3</div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">Partie Gauche</div>
-    <div class="col-md-10">Partie droite</div>
+    <div class="col-md-2">
+        <ul class="nav nav-pills nav-stacked" style="background-color:#333">
+            <li role="presentation"><a href="#">Unlocks</a></li>
+            <li role="presentation"><a href="#">Cash Upgrades</a></li>
+            <li role="presentation"><a href="#">Angel Upgrades</a></li>
+            <li role="presentation"><a href="#">Managers</a></li>
+            <li role="presentation"><a href="#">Investors</a></li>
+          </ul>
+    </div>
+    <div class="col-md-10">
+      <app-product [prod]="world.products.product[0]" class="product col-md-6"></app-product>
+      <app-product [prod]="world.products.product[1]" class="product col-md-6"></app-product>
+    </div>
   </div>
 </div>
- {{money}}

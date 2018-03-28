@@ -11,6 +11,8 @@ export class AppComponent {
   title: string;
   world: World = new World();
   server: string;
+  devise: string;
+  allProducts : Product[]
 
   constructor(private service: RestserviceService) {
     this.server = service.getServer();
@@ -18,8 +20,11 @@ export class AppComponent {
       data => {
         this.world = data;
         console.log(this.world);
+        this.allProducts = this.world.products.product;
       });
+    this.devise = "img/Schmeckles.png";
   }
+
 }
 
 
