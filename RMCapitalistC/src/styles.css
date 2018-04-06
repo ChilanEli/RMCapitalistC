@@ -1,7 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
-*{border: 1px solid red;}
+/**{border: 1px solid red;}*/
 
 body {
     background-image: url("http://localhost:8080/RMCapitalistS/img/background.jpg");
     background-size: cover;
+}
+
+h1, h3{
+    color : white;
+}
+
+.menuL{
+    margin-bottom: 10px;
 }

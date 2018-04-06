@@ -16,7 +16,7 @@
 
       <form class="navbar-form navbar-left">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Rick C-137">
+          <input #user type="text" class="form-control" placeholder="Rick C-137" [(ngModel)]="username" (change)="onUsernameChanged(user.value)" />
         </div>
       </form>
       <a class="navbar-brand">
@@ -26,9 +26,8 @@
         <img [attr.src]="server+devise" width="30" height="30" class="moneyLogo"> </a>
       <ul class="nav navbar-nav navbar-form navbar-right">
         <li>
-          <button type="button" class="btn btn-danger" id="multiplicateur">Buy 1 X</button>
+          <button type="button" class="btn btn-danger" id="btnMultiplicateur" (click)="setMulti()">Buy X {{qtmulti}}</button>
         </li>
-
       </ul>
     </div>
 
@@ -41,17 +40,88 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-2">
-        <ul class="nav nav-pills nav-stacked" style="background-color:#333">
-            <li role="presentation"><a href="#">Unlocks</a></li>
-            <li role="presentation"><a href="#">Cash Upgrades</a></li>
-            <li role="presentation"><a href="#">Angel Upgrades</a></li>
-            <li role="presentation"><a href="#">Managers</a></li>
-            <li role="presentation"><a href="#">Investors</a></li>
-          </ul>
+      <div class="row menuL">
+        <div class="buttonleft btn btn-danger btn-lg btn-block" data-toggle="modal" (click)="unlocksModal.show()">
+          <span class="badge">{{badgeUnlock}}</span> Unlocks </div>
+      </div>
+      <div class="row menuL">
+        <div class="buttonleft btn btn-danger btn-lg btn-block" data-toggle="modal" (click)="cashUpgradesModal.show()"> Cash Upgrades </div>
+      </div>
+      <div class="row menuL">
+        <div class="buttonleft btn btn-danger btn-lg btn-block" data-toggle="modal" (click)="angelUpgradesModal.show()"> Angel Upgrades </div>
+      </div>
+      <div class="row menuL">
+        <div class="buttonleft btn btn-danger btn-lg btn-block" data-toggle="modal" (click)="managersModal.show()">
+          <span class="badge">{{badgeManager}}</span> Managers </div>
+      </div>
+      <div class="row menuL">
+        <div class="buttonleft btn btn-danger btn-lg btn-block" data-toggle="modal" (click)="investorsModal.show()"> Investors </div>
+      </div>
+      <toaster-container></toaster-container>
     </div>
     <div class="col-md-10">
-      <app-product [prod]="world.products.product[0]" class="product col-md-6"></app-product>
-      <app-product [prod]="world.products.product[1]" class="product col-md-6"></app-product>
+      <app-product [prod]="world.products.product[0]" class="product col-md-6" [pmoney]="world.money" [qtmulti]="qtmulti" (notifyProduction)="onProductionDone($event)"
+        (notifyAchat)="onBuy($event)"></app-product>
+      <app-product [prod]="world.products.product[1]" class="product col-md-6" [pmoney]="world.money" [qtmulti]="qtmulti" (notifyProduction)="onProductionDone($event)"
+        (notifyAchat)="onBuy($event)"></app-product>
     </div>
   </div>
 </div>
+
+<app-modal #unlocksModal>
+  <div class="app-modal-header">
+    <h4 class="modal-title">Managers make you feel better !</h4>
+  </div>
+  <div class="app-modal-body">
+    <div *ngFor="let manager of world.managers.pallier">
+      <div class="row">
+        <div class="col-md-3">
+          <img class="card-img-top img-responsive img-rounded" [attr.src]="server+manager.logo">
+        </div>
+        <div class="col-md-6">
+          <div class="row">{{manager.name}}</div>
+          <div class="row">Run {{world.products.product[manager.idcible-1].name}}</div>
+        </div>
+        <div class="col-md-3">
+          <div class="row">
+            <button type="button" class="btn btn-success btn-block" [disabled]="world.money < manager.seuil">Hire !</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="app-modal-footer">
+    <button type="button" class="btn btn-default" (click)="unlocksModal.hide()">Close</button>
+  </div>
+</app-modal>
+
+
+<app-modal #managersModal>
+  <div class="app-modal-header">
+    <h4 class="modal-title">Managers make you feel better !</h4>
+  </div>
+  <div class="app-modal-body">
+    <div *ngFor="let manager of world.managers.pallier">
+      <div *ngIf="manager.unlocked == false">
+        <div class="row">
+          <div class="col-md-3">
+            <img class="card-img-top img-responsive img-rounded" [attr.src]="server+manager.logo">
+          </div>
+          <div class="col-md-6">
+            <div class="row">{{manager.name}}</div>
+            <div class="row">{{manager.seuil}} Schmeckles</div>
+            <div class="row">Run {{world.products.product[manager.idcible-1].name}}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <button type="button" class="btn btn-success btn-block" [disabled]="world.money < manager.seuil" (click)="hireManager(manager)">Hire !</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="app-modal-footer">
+    <button type="button" class="btn btn-default" (click)="managersModal.hide()">Close</button>
+  </div>
+</app-modal>
