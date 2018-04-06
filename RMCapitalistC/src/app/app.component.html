@@ -16,7 +16,8 @@
 
       <form class="navbar-form navbar-left">
         <div class="form-group">
-          <input #user type="text" class="form-control" placeholder="Rick C-137" [(ngModel)]="username" (change)="onUsernameChanged(user.value)" />
+          <input #user type="text" class="form-control" placeholder="Rick C-137" [(ngModel)]="username" (change)="onUsernameChanged(user.value)"
+          />
         </div>
       </form>
       <a class="navbar-brand">
@@ -60,10 +61,30 @@
       <toaster-container></toaster-container>
     </div>
     <div class="col-md-10">
-      <app-product [prod]="world.products.product[0]" class="product col-md-6" [pmoney]="world.money" [qtmulti]="qtmulti" (notifyProduction)="onProductionDone($event)"
-        (notifyAchat)="onBuy($event)"></app-product>
-      <app-product [prod]="world.products.product[1]" class="product col-md-6" [pmoney]="world.money" [qtmulti]="qtmulti" (notifyProduction)="onProductionDone($event)"
-        (notifyAchat)="onBuy($event)"></app-product>
+      <div class="row rowI">
+        <div class="col-md-12">
+          <app-product [prod]="world.products.product[0]" class="product col-md-6" [pmoney]="world.money" [qtmulti]="qtmulti" (notifyProduction)="onProductionDone($event)"
+            (notifyAchat)="onBuy($event)"></app-product>
+          <app-product [prod]="world.products.product[3]" class="product col-md-6" [pmoney]="world.money" [qtmulti]="qtmulti" (notifyProduction)="onProductionDone($event)"
+            (notifyAchat)="onBuy($event)"></app-product>
+        </div>
+      </div>
+      <div class="row rowI">
+        <div class="col-md-12">
+          <app-product [prod]="world.products.product[1]" class="product col-md-6" [pmoney]="world.money" [qtmulti]="qtmulti" (notifyProduction)="onProductionDone($event)"
+            (notifyAchat)="onBuy($event)"></app-product>
+          <app-product [prod]="world.products.product[4]" class="product col-md-6" [pmoney]="world.money" [qtmulti]="qtmulti" (notifyProduction)="onProductionDone($event)"
+            (notifyAchat)="onBuy($event)"></app-product>
+        </div>
+      </div>
+      <div class="row rowI">
+        <div class="col-md-12">
+          <app-product [prod]="world.products.product[2]" class="product col-md-6" [pmoney]="world.money" [qtmulti]="qtmulti" (notifyProduction)="onProductionDone($event)"
+            (notifyAchat)="onBuy($event)"></app-product>
+          <app-product [prod]="world.products.product[5]" class="product col-md-6" [pmoney]="world.money" [qtmulti]="qtmulti" (notifyProduction)="onProductionDone($event)"
+            (notifyAchat)="onBuy($event)"></app-product>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -1,7 +1,9 @@
-<div class='row' style="background-color:#333; margin-right:1px">
+<div class='row' style="background-color:#333; margin-left:6px; margin-right:6px; margin-bottom:30px;">
   <div class="col-md-3">
     <img class="card-img-top img-responsive img-rounded" [attr.src]="path+product.logo" (click)="produir()">
-    <div class="bottom-align-text text-center text-success">Quantité : {{product.quantite}}</div>
+    <div class="bottom-align-text text-center text-success">
+      <b>Quantité : {{product.quantite}}</b>
+    </div>
   </div>
   <div class="col-md-9">
     <h1>{{product.name}}</h1>
