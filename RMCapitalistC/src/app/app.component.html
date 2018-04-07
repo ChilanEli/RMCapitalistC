@@ -16,8 +16,7 @@
 
       <form class="navbar-form navbar-left">
         <div class="form-group">
-          <input #user type="text" class="form-control" placeholder="Rick C-137" [(ngModel)]="username" (change)="onUsernameChanged(user.value)"
-          />
+          <input #user type="text" class="form-control" [(ngModel)]="username" (change)="onUsernameChanged(user.value)" value="{{username}}" />
         </div>
       </form>
       <a class="navbar-brand">
@@ -46,7 +45,8 @@
           <span class="badge">{{badgeUnlock}}</span> Unlocks </div>
       </div>
       <div class="row menuL">
-        <div class="buttonleft btn btn-danger btn-lg btn-block" data-toggle="modal" (click)="cashUpgradesModal.show()"> Cash Upgrades </div>
+        <div class="buttonleft btn btn-danger btn-lg btn-block" data-toggle="modal" (click)="cashUpgradesModal.show()">
+          <span class="badge">{{badgeUnlock}}</span> Cash Upgrades </div>
       </div>
       <div class="row menuL">
         <div class="buttonleft btn btn-danger btn-lg btn-block" data-toggle="modal" (click)="angelUpgradesModal.show()"> Angel Upgrades </div>
@@ -91,35 +91,145 @@
 
 <app-modal #unlocksModal>
   <div class="app-modal-header">
-    <h4 class="modal-title">Managers make you feel better !</h4>
+    <h4 class="modal-title">Unlocks</h4>
+    <small>Nobody exists on purpose. Nobody belongs anywhere. Everybody’s gonna die. Come watch TV?</small>
   </div>
   <div class="app-modal-body">
-    <div *ngFor="let manager of world.managers.pallier">
-      <div class="row">
-        <div class="col-md-3">
-          <img class="card-img-top img-responsive img-rounded" [attr.src]="server+manager.logo">
-        </div>
-        <div class="col-md-6">
-          <div class="row">{{manager.name}}</div>
-          <div class="row">Run {{world.products.product[manager.idcible-1].name}}</div>
-        </div>
-        <div class="col-md-3">
+    <div *ngFor="let product of world.products.product">
+      <div *ngFor="let pallier of product.palliers.pallier">
+        <div class="card border-success">
           <div class="row">
-            <button type="button" class="btn btn-success btn-block" [disabled]="world.money < manager.seuil">Hire !</button>
+            <div class="col-md-3">
+              <img class="card-img-top img-responsive img-rounded" [attr.src]="server+pallier.logo">
+            </div>
+            <div class="col-md-9">
+              <div class="row mt-1">
+                <div class="col-md-12">
+                  <h5 class="text-center text-success">{{pallier.name}}</h5>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="text-center text-secondary">
+                    <span>{{product.name}} {{pallier.typeratio}} X {{pallier.ratio}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <h5 class="text-center text-warning">
+                    <span [innerHTML]="pallier.seuil"></span>
+                  </h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr/>
+    <div *ngFor="let pallier of world.allunlocks.pallier">
+      <div *ngIf="pallier.unlocked == false && pallier.idcible == 0" class="card border-success">
+        <div class="row">
+          <div class="col-md-3">
+            <img class="card-img-top img-responsive img-rounded" [attr.src]="server+pallier.logo">
+          </div>
+          <div class="col-md-9">
+            <div class="row mt-1">
+              <div class="col-md-12">
+                <h5 class="text-center text-success">{{pallier.name}}</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="text-center text-secondary">
+                  <span *ngIf="pallier.idcible == 0">ALL {{pallier.typeratio}} X {{pallier.ratio}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h5 class="text-center text-warning">
+                  Get each product
+                  <span [innerHTML]="pallier.seuil"></span> qte
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="app-modal-footer">
+    <button type="button" class="btn btn-danger" (click)="unlocksModal.hide()">Close</button>
+  </div>
+</app-modal>
+
+<app-modal #cashUpgradesModal>
+  <div class="app-modal-header">
+    <h4 class="modal-title">Cash Upgrades</h4>
+    <small>Nobody exists on purpose. Nobody belongs anywhere. Everybody’s gonna die. Come watch TV?</small>
+  </div>
+  <div class="app-modal-body">
+    <div *ngFor="let upgrade of world.upgrades.pallier">
+      <div *ngIf="upgrade.unlocked == false" class="card border-success">
+        <div class="row">
+          <div class="col-md-3">
+            <img class="card-img-top img-responsive img-rounded" [attr.src]="server+upgrade.logo">
+          </div>
+          <div class="col-md-6">
+            <div class="row mt-1">
+              <div class="col-md-12">
+                <b class="text-center text-success">{{upgrade.name}}</b>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="text-secondary">
+                  <span>{{world.products.product[upgrade.idcible-1].name}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h5 class="text-warning">
+                  <span [innerHTML]="upgrade.seuil | bigvalue"></span> Schmeckles</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 pr-4">
+            <button type="button" class="btn btn-block btn-success" [disabled]="world.money < upgrade.seuil" (click)="buyUpgrade(upgrade)">Buy !</button>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="app-modal-footer">
-    <button type="button" class="btn btn-default" (click)="unlocksModal.hide()">Close</button>
+    <button type="button" class="btn btn-danger" (click)="cashUpgradesModal.hide()">Close</button>
   </div>
 </app-modal>
 
+<app-modal #angelUpgradesModal>
+  <div class="app-modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="angelsModal.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Angels Upgrades</h4>
+    <small>Wubba Lubba dub-dub -- I am in great pain, please help me !</small>
+  </div>
+  <div class="app-modal-body">
+    
+  </div>
+  <div class="app-modal-footer">
+    <button type="button" class="btn btn-danger btn-block" (click)="angelUpgradesModal.hide()">Close</button>
+  </div>
+</app-modal>
 
 <app-modal #managersModal>
   <div class="app-modal-header">
-    <h4 class="modal-title">Managers make you feel better !</h4>
+    <h4 class="modal-title">Managers</h4>
+    <small>Well hello there ! What can I do for you ?</small>
   </div>
   <div class="app-modal-body">
     <div *ngFor="let manager of world.managers.pallier">
@@ -143,6 +253,71 @@
     </div>
   </div>
   <div class="app-modal-footer">
-    <button type="button" class="btn btn-default" (click)="managersModal.hide()">Close</button>
+    <button type="button" class="btn btn-danger" (click)="managersModal.hide()">Close</button>
   </div>
 </app-modal>
+
+<app-modal #investorsModal>
+    <div class="app-modal-header">
+      <h4 class="modal-title">Investors</h4>
+      <small>In bird culture, this is considered a dick move</small>
+    </div>
+    <div class="app-modal-body">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+              <div class="card border-success">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h4 class="text-center text-success">Total Angels</h4>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="text-warning text-center" [innerHTML]="world.totalangels | bigvalue"> </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3"></div>
+          </div>
+          <div class="row  my-3">
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+              <div class="card border-success">
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="text-warning text-center">
+                      <span [innerHTML]="world.angelbonus"></span>%</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <h5 class="text-center text-success">Bonus Per Angel</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+              <div class="card border-success">
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                    <b class="text-warning " [innerHTML]="world.totalangels | bigvalue"> </b>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <h5 class="text-center text-success">Claimed With Restart</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1"></div>
+          </div>
+          <button class="btn btn-block btn-success" (click)="resetWorld()">Claim Angel Investors</button>
+    </div>
+    <div class="app-modal-footer">
+      <button type="button" class="btn btn-danger" (click)="investorsModal.hide()">Close</button>
+    </div>
+  </app-modal>

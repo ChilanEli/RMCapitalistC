@@ -18,19 +18,20 @@ export class AppComponent {
   allProducts: Product[]
   badgeManager: string;
   badgeUnlock: string;
+  badgeCashUpgrades: string;
   username: string;
 
   constructor(private service: RestserviceService, private toasterService: ToasterService) {
     this.server = service.getServer();
+    this.username = localStorage.getItem("username");
+    if (this.username == null || this.username == "") {
+      this.newUser();
+    }    
     this.service.getWorld().then(data => {
       this.world = data;
     });
     this.devise = "img/Schmeckles.png";
     this.qtmulti = 1;
-    this.username = localStorage.getItem("username");
-    if (this.username == null || this.username == "") {
-      this.newUser();
-    }
   }
 
   setMulti(): void {
@@ -49,37 +50,50 @@ export class AppComponent {
   onBuy(p): void {
     this.world.money -= p;
     this.checkBadges();
-    //this.notify();
   }
 
-  hireManager(m): void {
-    this.world.money -= m.seuil;
-    m.unlocked = true;
-    this.world.products.product[m.idcible - 1].managerUnlocked = true;
+  hireManager(manager): void {
+    this.world.money -= manager.seuil;
+    manager.unlocked = true;
+    this.world.products.product[manager.idcible - 1].managerUnlocked = true;
     this.checkBadges();
-    this.toasterService.pop('success', 'Manager hired ! ', m.name);
+    this.toasterService.pop('success', 'Manager hired ! ', manager.name);
   }
 
   checkBadges(): void {
     this.badgeManager = "";
     this.badgeUnlock = "";
+    this.badgeCashUpgrades = "";
+    var m = this.world.money;
     for (let mPallier of this.world.managers.pallier) {
-      if (this.world.money >= mPallier.seuil && !mPallier.unlocked) {
+      if (m >= mPallier.seuil && !mPallier.unlocked) {
         this.badgeManager = "NEW";
       }
     }
-    for (let uPallier of this.world.upgrades.pallier) {
-      if (this.world.money >= uPallier.seuil && !uPallier.unlocked) {
+    for (let uPallier of this.world.allunlocks.pallier) {
+      if (m >= uPallier.seuil && !uPallier.unlocked) {
         this.badgeUnlock = "NEW";
+      }
+    }
+    for (let aPallier of this.world.allunlocks.pallier) {
+      if (m >= aPallier.seuil && !aPallier.unlocked) {
+        this.badgeCashUpgrades = "NEW";
       }
     }
   }
 
   onUsernameChanged(user): void {
     this.username = user;
+    // if (this.username == null || this.username == "") {
+    //   this.newUser();
+    // }
+    if (this.username == null || this.username == "") {
+       this.username = "Rick C-137";
+     }
     localStorage.setItem("username", this.username);
     this.service.user = this.username;
     this.service.getWorld();
+      
   }
 
   newUser(): void {
