@@ -75,6 +75,8 @@ export class ProductComponent implements OnInit {
     var qt = this.calcMaxCanBuy()[0];
     this.product.quantite += qt;
     this.notifyAchat.emit(this._cout);
+    this.service.putProduct(this.product);
+    
   }
 
   calcScore(): void {
