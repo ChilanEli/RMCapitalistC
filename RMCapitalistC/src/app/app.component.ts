@@ -23,7 +23,6 @@ export class AppComponent {
   badgeUnlock: string;
   badgeCashUpgrades: string;
   username: string;
-  angels: any;
   song: string;
 
   constructor(private service: RestserviceService, private toasterService: ToasterService) {
@@ -41,8 +40,6 @@ export class AppComponent {
     this.backangels1 = "img/birdangel.png";
     this.backangels2 = "img/birdangel1.png";
     this.qtmulti = 1;
-    //this.checkBadges();
-    this.angels = 10;
   }
 
   setMulti(): void {
@@ -55,7 +52,7 @@ export class AppComponent {
   onProductionDone(p: Product): void {
     this.world.money += (1 + (this.world.activeangels * this.world.angelbonus)) * (p.revenu * p.quantite);
     this.world.score += (1 + (this.world.activeangels * this.world.angelbonus)) * (p.revenu * p.quantite);
-    this.angels = Math.round(150 * Math.sqrt(this.world.score / 10 ** 15) - this.world.totalangels);
+    this.world.totalangels = Math.round(150 * Math.sqrt(this.world.score / Math.pow(10,15)) - this.world.totalangels);
     this.checkBadges();
   }
 
@@ -99,7 +96,7 @@ export class AppComponent {
       for (let pPallier of p.palliers.pallier) {
         if (pPallier.seuil <= p.quantite && !pPallier.unlocked) {
           this.badgeUnlock = "NEW";
-          this.activePallierId(pPallier,p);
+          this.activePallierId(pPallier, p);
         }
       }
     }
@@ -122,7 +119,7 @@ export class AppComponent {
     }
     localStorage.setItem("username", this.username);
     this.service.user = this.username;
-    this.toasterService.pop('info', "Welcome Back !", this.username);
+    this.toasterService.pop('info', "Welcome !", this.username);
     this.service.getWorld();
 
     setTimeout(function () { window.location.reload(); }, 2000);
@@ -148,31 +145,54 @@ export class AppComponent {
     this.checkBadges();
   }
 
-  activePallierId(p,i): void {
+  activePallierId(p, i): void {
     p.unlocked = true;
-    if (p.typeratio.equals("gain")) {
-      this.world.products.product[p.idcible-1].revenu *= p.ratio;
-      console.log(this.world.products.product[p.idcible-1].revenu);
-    }
-    else if (p.typeratio.equals("vitesse")) {
-        this.world.products.product[p.idcible-1].vitesse = Math.floor(this.world.products.product[p.idcible-1].vitesse / p.ratio);
-        this.world.products.product[p.idcible-1].timeleft = Math.floor(this.world.products.product[p.idcible-1].timeleft / p.ratio);
+    //console.log(p.typeratio.equals("gain"));
+    // if (p.typeratio.equals("gain")) {
+    //   this.world.products.product[p.idcible-1].revenu *= p.ratio;
+    // }
+    // else if (p.typeratio.equals("vitesse")) {
+    //     this.world.products.product[p.idcible-1].vitesse = Math.floor(this.world.products.product[p.idcible-1].vitesse / p.ratio);
+    //     this.world.products.product[p.idcible-1].timeleft = Math.floor(this.world.products.product[p.idcible-1].timeleft / p.ratio);
+    // }
+    switch (p.typeratio) {
+      case "GAIN":
+        this.world.products.product[p.idcible - 1].revenu *= p.ratio;
+        break;
+      case "VITESSE":
+        this.world.products.product[p.idcible - 1].vitesse = Math.floor(this.world.products.product[p.idcible - 1].vitesse / p.ratio);
+        this.world.products.product[p.idcible - 1].timeleft = Math.floor(this.world.products.product[p.idcible - 1].timeleft / p.ratio);
+        break;
     }
     this.toasterService.pop('success', "Pallier atteint !", p.name);
   }
 
+
   activePallier(p): void {
     p.unlocked = true;
-    if (p.typeratio.equals("gain")) {
-      this.world.products.product.forEach(pr => {
-        pr.revenu *= p.ratio;
-      });
-    }
-    else if (p.typeratio.equals("vitesse")) {
-      this.world.products.product.forEach(pr => {
-        pr.vitesse = Math.floor(pr.vitesse / p.ratio);
-        pr.timeleft = Math.floor(pr.timeleft / p.ratio);
-      });
+    // if (p.typeratio.equals("gain")) {
+    //   this.world.products.product.forEach(pr => {
+    //     pr.revenu *= p.ratio;
+    //   });
+    // }
+    // else if (p.typeratio.equals("vitesse")) {
+    //   this.world.products.product.forEach(pr => {
+    //     pr.vitesse = Math.floor(pr.vitesse / p.ratio);
+    //     pr.timeleft = Math.floor(pr.timeleft / p.ratio);
+    //   });
+    // }
+    switch (p.typeratio) {
+      case "GAIN":
+        this.world.products.product.forEach(pr => {
+          pr.revenu *= p.ratio;
+        });
+        break;
+      case "VITESSE":
+        this.world.products.product.forEach(pr => {
+          pr.vitesse = Math.floor(pr.vitesse / p.ratio);
+          pr.timeleft = Math.floor(pr.timeleft / p.ratio);
+        });
+        break;
     }
     this.toasterService.pop('success', "Pallier atteint !", p.name);
   }
@@ -180,5 +200,28 @@ export class AppComponent {
   tryAgain(): void {
     this.service.removeWorld();
     window.location.reload();
+  }
+
+  buyAngels(angel): void {
+    this.world.money -= angel.seuil;
+    switch (angel.typeratio) {
+      case "GAIN":
+        this.world.products.product.forEach(pr => {
+          pr.revenu *= angel.ratio;
+        });
+        break;
+      case "VITESSE":
+        this.world.products.product.forEach(pr => {
+          pr.vitesse = Math.floor(pr.vitesse / angel.ratio);
+          pr.timeleft = Math.floor(pr.timeleft / angel.ratio);
+        });
+        break;
+      case "ANGE":
+        this.world.angelbonus *= angel.ratio;
+        break;
+    }
+    this.checkBadges();
+    this.toasterService.pop('success', 'Angel bought ! ', angel.name);
+    this.service.putAngel(angel);
   }
 }

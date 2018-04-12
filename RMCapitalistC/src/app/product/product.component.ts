@@ -63,7 +63,6 @@ export class ProductComponent implements OnInit {
   }
 
   produir(): void {
-    console.log(this.product.name + " en production !");
     if (this.product.timeleft == 0 && this.product.quantite > 0) {
       this.progressbar.animate(1, { duration: this.product.vitesse });
       this.product.timeleft = this.product.vitesse;
