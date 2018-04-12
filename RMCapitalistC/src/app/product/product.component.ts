@@ -55,11 +55,15 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     this.progressbar = new ProgressBar.Line(this.progressBarItem.nativeElement, { strokeWidth: 50, color: '#00ff00' });
-    setInterval(() => { this.calcScore(); this.calcMaxCanBuy(); }, 10);
+    setInterval(() => {
+      this.calcScore();
+      this._qtmulti = this.calcMaxCanBuy()[0];
+      this._cout = this.calcMaxCanBuy()[1];;
+    }, 100);
   }
 
   produir(): void {
-    //console.log(this.product.name + " en production !")
+    console.log(this.product.name + " en production !");
     if (this.product.timeleft == 0 && this.product.quantite > 0) {
       this.progressbar.animate(1, { duration: this.product.vitesse });
       this.product.timeleft = this.product.vitesse;
@@ -76,7 +80,7 @@ export class ProductComponent implements OnInit {
     this.product.quantite += qt;
     this.notifyAchat.emit(this._cout);
     this.service.putProduct(this.product);
-    
+
   }
 
   calcScore(): void {

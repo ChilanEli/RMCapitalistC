@@ -1,3 +1,4 @@
+<!--<audio [attr.src]="server+song" autoplay></audio>-->
 <nav class="navbar navbar-inverse" style="background-color:#333">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -92,6 +93,9 @@
 
 <app-modal #unlocksModal>
   <div class="app-modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="unlocksModal.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
     <h4 class="modal-title">Unlocks</h4>
     <small>Nobody exists on purpose. Nobody belongs anywhere. Everybody’s gonna die. Come watch TV?</small>
   </div>
@@ -223,12 +227,15 @@
     </div>
   </div>
   <div class="app-modal-footer">
-    <button type="button" class="btn btn-danger" (click)="unlocksModal.hide()">Close</button>
+    <button type="button" class="btn btn-danger btn-block" (click)="unlocksModal.hide()">Close</button>
   </div>
 </app-modal>
 
 <app-modal #cashUpgradesModal>
   <div class="app-modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="cashUpgradesModal.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
     <h4 class="modal-title">Cash Upgrades</h4>
     <small>Nobody exists on purpose. Nobody belongs anywhere. Everybody’s gonna die. Come watch TV?</small>
   </div>
@@ -304,13 +311,13 @@
     </div>
   </div>
   <div class="app-modal-footer">
-    <button type="button" class="btn btn-danger" (click)="cashUpgradesModal.hide()">Close</button>
+    <button type="button" class="btn btn-danger btn-block" (click)="cashUpgradesModal.hide()">Close</button>
   </div>
 </app-modal>
 
 <app-modal #angelUpgradesModal>
   <div class="app-modal-header">
-    <button type="button" class="close" aria-label="Close" (click)="angelsModal.hide()">
+    <button type="button" class="close" aria-label="Close" (click)="angelUpgradesModal.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title">Angels Upgrades</h4>
@@ -324,12 +331,27 @@
             <img class="card-img-top img-responsive img-rounded" [attr.src]="server+angel.logo">
           </div>
           <div class="col-md-6">
-            <div class="row">{{angel.name}}</div>
-            <div class="row">{{angel.seuil | bigvalue}}</div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="text-success">{{angel.name}}</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="text-info">{{angel.typeratio}} : Bonus {{angel.ratio |bigvalue}}</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="text-warning">{{angel.seuil | bigvalue}} Schmeckles</div>
+              </div>
+            </div>
           </div>
           <div class="col-md-3">
             <div class="row">
-              <button type="button" class="btn btn-success btn-block" [disabled]="world.money < angel.seuil">Buy !</button>
+              <div class="col-md-12">
+                <button type="button" class="btn btn-success btn-block" [disabled]="world.money < angel.seuil">Buy !</button>
+              </div>
             </div>
           </div>
         </div>
@@ -344,6 +366,9 @@
 
 <app-modal #managersModal>
   <div class="app-modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="managersModal.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
     <h4 class="modal-title">Managers</h4>
     <small>Well hello there ! What can I do for you ?</small>
   </div>
@@ -372,13 +397,27 @@
             <img class="card-img-top img-responsive img-rounded" [attr.src]="server+manager.logo">
           </div>
           <div class="col-md-6">
-            <div class="row">{{manager.name}}</div>
-            <div class="row">{{manager.seuil}} Schmeckles</div>
-            <div class="row">Run {{world.products.product[manager.idcible-1].name}}</div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="text-success">{{manager.name}}</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="text-info">Run {{world.products.product[manager.idcible-1].name}}</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="text-warning">{{manager.seuil | bigvalue}} Schmeckles</div>
+              </div>
+            </div>
           </div>
           <div class="col-md-3">
             <div class="row">
-              <button type="button" class="btn btn-success btn-block" [disabled]="world.money < manager.seuil" (click)="hireManager(manager)">Hire !</button>
+              <div class="col-md-12">
+                <button type="button" class="btn btn-success btn-block" [disabled]="world.money < manager.seuil" (click)="hireManager(manager)">Hire !</button>
+              </div>
             </div>
           </div>
         </div>
@@ -386,73 +425,80 @@
     </div>
   </div>
   <div class="app-modal-footer">
-    <button type="button" class="btn btn-danger" (click)="managersModal.hide()">Close</button>
+    <button type="button" class="btn btn-danger btn-block" (click)="managersModal.hide()">Close</button>
   </div>
 </app-modal>
 
 <app-modal #investorsModal>
   <div class="app-modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="investorsModal.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
     <h4 class="modal-title">Investors</h4>
     <small>In bird culture, this is considered a dick move</small>
   </div>
   <div class="app-modal-body">
-    <div class="row">
-      <div class="col-md-3"></div>
-      <div class="col-md-6">
-        <div class="card border-success">
-          <div class="row">
-            <div class="col-md-12">
-              <h4 class="text-center text-success">Total Angels</h4>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <p class="text-info text-center" [innerHTML]="world.totalangels | bigvalue"> </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3"></div>
+    <div class="col-md-2 vertical-center">
+      <img class="card-img-top img-responsive img-rounded" [attr.src]="server+backangels1">
     </div>
-    <div class="row  my-3">
-      <div class="col-md-1"></div>
-      <div class="col-md-4">
-        <div class="card border-success">
-          <div class="row">
-            <div class="col-md-12">
-              <p class="text-warning text-center">
-                <span [innerHTML]="world.angelbonus"></span>%</p>
+    <div class=col-md-8>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card border-success">
+            <div class="row">
+              <div class="col-md-12">
+                <h4 class="text-center text-success">Total Angels</h4>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <h5 class="text-info">Bonus Per Angel</h5>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2"></div>
-      <div class="col-md-4">
-        <div class="card border-success">
-          <div class="row">
-            <div class="col-md-12 text-center">
-              <p class="text-warning text-center">
-                <b class="text-info" [innerHTML]="world.totalangels | bigvalue"></b> Angels</p>
-
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <h5 class="text-center text-success">To Claim With Restart</h5>
+            <div class="row">
+              <div class="col-md-12">
+                <p class="text-info text-center" [innerHTML]="world.totalangels | bigvalue"> </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-1"></div>
+      <hr/>
+      <div class="row  my-3">
+        <div class="col-md-5">
+          <div class="card border-success">
+            <div class="row">
+              <div class="col-md-12">
+                <p class="text-warning text-center">
+                  <span [innerHTML]="world.angelbonus"></span>%</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h5 class="text-info text-center">Bonus Per Angel</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-5">
+          <div class="card border-success">
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <p class="text-warning text-center">
+                  <b class="text-info" [innerHTML]="world.totalangels | bigvalue"></b> Angels</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h5 class="text-center text-success">To Claim With Restart</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 vertical-center">
+      <img class="card-img-top img-responsive img-rounded" [attr.src]="server+backangels2">
     </div>
     <button class="btn btn-block btn-success" (click)="tryAgain()">Claim Angel Investors</button>
   </div>
   <div class="app-modal-footer">
-    <button type="button" class="btn btn-danger" (click)="investorsModal.hide()">Close</button>
+    <button type="button" class="btn btn-danger btn-block" (click)="investorsModal.hide()">Close</button>
   </div>
 </app-modal>

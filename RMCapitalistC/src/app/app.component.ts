@@ -14,6 +14,8 @@ export class AppComponent {
   title: string;
   world: World = new World();
   server: string;
+  backangels1: string;
+  backangels2: string;
   devise: string;
   qtmulti: any;
   allProducts: Product[]
@@ -22,11 +24,13 @@ export class AppComponent {
   badgeCashUpgrades: string;
   username: string;
   angels: any;
+  song: string;
 
   constructor(private service: RestserviceService, private toasterService: ToasterService) {
     this.server = service.getServer();
     this.username = localStorage.getItem("username");
     this.service.setUser(this.username);
+    this.song = "music/theme.mp3";
     if (this.username == null || this.username == "") {
       this.newUser();
     }
@@ -34,6 +38,8 @@ export class AppComponent {
       this.world = data;
     });
     this.devise = "img/Schmeckles.png";
+    this.backangels1 = "img/birdangel.png";
+    this.backangels2 = "img/birdangel1.png";
     this.qtmulti = 1;
     //this.checkBadges();
     this.angels = 10;
@@ -64,7 +70,7 @@ export class AppComponent {
     this.world.products.product[manager.idcible - 1].managerUnlocked = true;
     this.checkBadges();
     this.toasterService.pop('success', 'Manager hired ! ', manager.name);
-    //this.service.putManager(manager);
+    this.service.putManager(manager);
   }
 
   checkBadges(): void {
@@ -93,7 +99,7 @@ export class AppComponent {
       for (let pPallier of p.palliers.pallier) {
         if (pPallier.seuil <= p.quantite && !pPallier.unlocked) {
           this.badgeUnlock = "NEW";
-          this.activePallier(pPallier);
+          this.activePallierId(pPallier,p);
         }
       }
     }
@@ -133,20 +139,46 @@ export class AppComponent {
     this.username = pseudo + id1 + "-" + id2;
   }
 
-  activeUpgrade(p): void {
-    p.unlocked = true;
-    this.world.money -= p.seuil;
-    this.world.products.product[p.idcible - 1].managerUnlocked = !this.world.products.product[p.idcible - 1].managerUnlocked;
-    this.toasterService.pop('success', "Upgrade Activate !", p.name);
+  activeUpgrade(u): void {
+    u.unlocked = true;
+    this.world.money -= u.seuil;
+    this.world.products.product[u.idcible - 1].revenu *= u.ratio;
+    this.toasterService.pop('success', "Upgrade Activate !", u.name);
+    this.service.putUpgrade(u);
     this.checkBadges();
+  }
+
+  activePallierId(p,i): void {
+    p.unlocked = true;
+    if (p.typeratio.equals("gain")) {
+      this.world.products.product[p.idcible-1].revenu *= p.ratio;
+      console.log(this.world.products.product[p.idcible-1].revenu);
+    }
+    else if (p.typeratio.equals("vitesse")) {
+        this.world.products.product[p.idcible-1].vitesse = Math.floor(this.world.products.product[p.idcible-1].vitesse / p.ratio);
+        this.world.products.product[p.idcible-1].timeleft = Math.floor(this.world.products.product[p.idcible-1].timeleft / p.ratio);
+    }
+    this.toasterService.pop('success', "Pallier atteint !", p.name);
   }
 
   activePallier(p): void {
     p.unlocked = true;
+    if (p.typeratio.equals("gain")) {
+      this.world.products.product.forEach(pr => {
+        pr.revenu *= p.ratio;
+      });
+    }
+    else if (p.typeratio.equals("vitesse")) {
+      this.world.products.product.forEach(pr => {
+        pr.vitesse = Math.floor(pr.vitesse / p.ratio);
+        pr.timeleft = Math.floor(pr.timeleft / p.ratio);
+      });
+    }
     this.toasterService.pop('success', "Pallier atteint !", p.name);
   }
 
   tryAgain(): void {
+    this.service.removeWorld();
     window.location.reload();
   }
 }
