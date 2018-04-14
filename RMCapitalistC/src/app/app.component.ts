@@ -66,7 +66,7 @@ export class AppComponent {
     manager.unlocked = true;
     this.world.products.product[manager.idcible - 1].managerUnlocked = true;
     this.checkBadges();
-    this.toasterService.pop('success', 'Manager hired ! ', manager.name);
+    this.toasterService.pop('success', 'Manager Hired ! ', manager.name);
     this.service.putManager(manager);
   }
 
@@ -111,11 +111,8 @@ export class AppComponent {
 
   onUsernameChanged(user): void {
     this.username = user;
-    // if (this.username == null || this.username == "") {
-    //   this.newUser();
-    // }
     if (this.username == null || this.username == "") {
-      this.username = "Rick C-137";
+      this.newUser();
     }
     localStorage.setItem("username", this.username);
     this.service.user = this.username;
@@ -164,7 +161,7 @@ export class AppComponent {
         this.world.products.product[p.idcible - 1].timeleft = Math.floor(this.world.products.product[p.idcible - 1].timeleft / p.ratio);
         break;
     }
-    this.toasterService.pop('success', "Pallier atteint !", p.name);
+    this.toasterService.pop('success', "Pallier Reach !", p.name);
   }
 
 
@@ -194,7 +191,7 @@ export class AppComponent {
         });
         break;
     }
-    this.toasterService.pop('success', "Pallier atteint !", p.name);
+    this.toasterService.pop('success', "Pallier Reach !", p.name);
   }
 
   tryAgain(): void {
@@ -221,7 +218,7 @@ export class AppComponent {
         break;
     }
     this.checkBadges();
-    this.toasterService.pop('success', 'Angel bought ! ', angel.name);
+    this.toasterService.pop('success', 'Angel Bought ! ', angel.name);
     this.service.putAngel(angel);
   }
 }

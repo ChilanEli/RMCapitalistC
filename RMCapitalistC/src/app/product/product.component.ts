@@ -34,8 +34,7 @@ export class ProductComponent implements OnInit {
       this._isqtmulmax = false;
     }
     this._qtmulti = value;
-    if (this._qtmulti && this.product) {
-      this.calcMaxCanBuy();
+    if (this._isqtmulmax && this.product) {
       this._qtmulti = this.calcMaxCanBuy()[0];
       this._cout = this.calcMaxCanBuy()[1];
     }
@@ -58,7 +57,7 @@ export class ProductComponent implements OnInit {
     setInterval(() => {
       this.calcScore();
       this._qtmulti = this.calcMaxCanBuy()[0];
-      this._cout = this.calcMaxCanBuy()[1];;
+      this._cout = this.calcMaxCanBuy()[1];
     }, 100);
   }
 
@@ -74,12 +73,10 @@ export class ProductComponent implements OnInit {
   }
 
   acheter(): void {
-    //console.log(this.product.name + " acheter !")
     var qt = this.calcMaxCanBuy()[0];
     this.product.quantite += qt;
     this.notifyAchat.emit(this._cout);
     this.service.putProduct(this.product);
-
   }
 
   calcScore(): void {
@@ -92,22 +89,19 @@ export class ProductComponent implements OnInit {
         this.notifyProduction.emit(this.product);
       }
     }
-    if (this.product.managerUnlocked == true && this.product.timeleft == 0 && this.product.quantite > 0) {
+    if (this.product.managerUnlocked && this.product.timeleft == 0 && this.product.quantite > 0) {
       this.progressbar.animate(1, { duration: this.product.vitesse });
       this.product.timeleft = this.product.vitesse;
       this.lastupdate = Date.now();
     }
-    this._qtmulti = this.calcMaxCanBuy()[0];
-    this._cout = this.calcMaxCanBuy()[1];
   }
 
   calcMaxCanBuy(): any {
-    //console.log("CalcMaxCanBuy")
     var PU = this.product.cout;
     var PM = this.money;
     var QTE = this.product.quantite;
     var TAUX = this.product.croissance
-    if (this._qtmulti == "MAX") {
+    if (this._isqtmulmax) {
       this._isqtmulmax = true;
       var cpt = 0;
       var PF = 0;
@@ -119,6 +113,7 @@ export class ProductComponent implements OnInit {
         cpt--;
         PF = PU * Math.pow(TAUX, QTE) * ((1 - Math.pow(TAUX, cpt)) / (1 - TAUX));
       }
+      this._qtmulti = cpt;
       return [cpt, PF];
     } else {
       this._isqtmulmax = false;
