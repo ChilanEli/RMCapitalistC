@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
-import { Product } from '../world';
+import { Product, World } from '../world';
 import { RestserviceService } from '../restservice.service';
 
 declare var require;
@@ -12,6 +12,7 @@ const ProgressBar = require("progressbar.js");
 })
 export class ProductComponent implements OnInit {
   path: string;
+  _world: World;
   product: Product;
   progressbar: any;
   lastupdate: any;
@@ -24,6 +25,10 @@ export class ProductComponent implements OnInit {
 
   @Input() set prod(value: Product) {
     this.product = value;
+  }
+
+  @Input() set pworld(value: World) {
+    this._world = value;
   }
 
   @Input() set qtmulti(value: string) {
